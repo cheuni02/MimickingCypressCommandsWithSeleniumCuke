@@ -25,9 +25,9 @@ public class ToDoStepDefs {
 
     private final WebDriver driver;
 
-    By todoList = By.cssSelector("ul.todo-list li");
-    By inputTodo = By.cssSelector("input.new-todo");
-    By checkDone = By.cssSelector("input[type=\"checkbox\"]");
+    By todoListCss = By.cssSelector("ul.todo-list li");
+    By inputTodoCss = By.cssSelector("input.new-todo");
+    By checkDoneCss = By.cssSelector("input[type=\"checkbox\"]");
 
     public List<WebElement> elements(By locator) {
         return driver.findElements(locator);
@@ -35,6 +35,12 @@ public class ToDoStepDefs {
 
     public WebElement element(By locator) {
         return driver.findElement(locator);
+    }
+
+    public WebElement labelWithTextViaXpath(String task) {
+        String xpathStr = "//*[contains(text(),'" + task + "')]/preceding-sibling::input";
+        System.out.println("xpathStr: " + xpathStr);
+        return driver.findElement(By.xpath(xpathStr));
     }
 
     public ToDoStepDefs(Hooks hooks) {
@@ -48,14 +54,14 @@ public class ToDoStepDefs {
 
     @Then("There are {int} items by default")
     public void thereAreItemsByDefault(int numItems) throws InterruptedException {
-        Integer actualNumItems = elements(todoList).size();
+        Integer actualNumItems = elements(todoListCss).size();
         assertEquals(actualNumItems, numItems);
     }
 
     @And("One of them is {string}")
     public void oneOfThemIsPayElectricBill(String task) throws InterruptedException {
         List<String> taskStrings = new ArrayList<>();
-        for (WebElement ele : elements(todoList)) {
+        for (WebElement ele : elements(todoListCss)) {
             taskStrings.add(ele.getText());
         }
         assertTrue(taskStrings.contains(task));
@@ -64,7 +70,7 @@ public class ToDoStepDefs {
     @When("I type a new Item {string}")
     public void iTypeANewItemFeedTheCat(String task) throws InterruptedException {
         new Actions(driver)
-                .sendKeys(element(inputTodo), task)
+                .sendKeys(element(inputTodoCss), task)
                 .sendKeys(Keys.ENTER)
                 .perform();
     }
@@ -76,37 +82,54 @@ public class ToDoStepDefs {
 
     @Then("There are now {int} items")
     public void thereAreNowItems(int numItems) throws InterruptedException {
-        assertEquals(elements(todoList).size(), numItems);
+        assertEquals(elements(todoListCss).size(), numItems);
     }
 
     @And("Last item is {string}")
     public void lastItemIsFeedTheCat(String task) {
-        assertEquals(elements(todoList).getLast().getText(), task);
+        assertEquals(elements(todoListCss).getLast().getText(), task);
     }
 
     @When("I add a new item {string}")
     public void iAddANewItemGoToDentist(String task) throws InterruptedException {
         new Actions(driver)
-                .sendKeys(element(inputTodo), task)
+                .sendKeys(element(inputTodoCss), task)
                 .sendKeys(Keys.ENTER)
                 .perform();
     }
 
     @And("Check it off as completed")
     public void checkItOffAsCompleted() throws InterruptedException {
-        elements(todoList)
+        elements(todoListCss)
                 .getLast()
-                .findElement(checkDone)
+                .findElement(checkDoneCss)
                 .click();
     }
 
     @Then("Item will appear with a strikethrough")
     public void itemWillAppearWithAStrikethrough() {
-        String lastItem = elements(todoList)
+        String lastItem = elements(todoListCss)
                 .getLast()
                 .getAttribute("class");
 
         assert lastItem != null;
         assertTrue(lastItem.contains("completed"));
+    }
+
+    @Given("Item {string} is checked as completed")
+    public void itemIsCheckedAsCompleted(String task) throws InterruptedException {
+        labelWithTextViaXpath(task).click();
+    }
+
+    @When("I filter for uncompleted tasks")
+    public void iFilterForUncompletedTasks() throws InterruptedException {
+        driver.findElement(By.linkText("Active")).click();
+    }
+
+    @Then("Only {string} shows")
+    public void onlyThisTaskShows(String task) throws InterruptedException {
+        List<WebElement> todoList = elements(todoListCss);
+        assertEquals(todoList.size(), 1);
+        assertEquals(todoList.getFirst().getText(), task);
     }
 }

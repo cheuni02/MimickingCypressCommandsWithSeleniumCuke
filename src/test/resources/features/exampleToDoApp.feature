@@ -23,3 +23,9 @@ Feature: As a modern day clerk
     When I add a new item 'Go to dentist'
     And Check it off as completed
     Then Item will appear with a strikethrough
+
+  @Chrome
+  Scenario: Can filter for uncompleted tasks
+    Given Item 'Pay electric bill' is checked as completed
+    When I filter for uncompleted tasks
+    Then Only 'Walk the dog' shows
