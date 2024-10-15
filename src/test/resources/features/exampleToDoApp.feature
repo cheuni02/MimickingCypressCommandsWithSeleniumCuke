@@ -18,3 +18,8 @@ Feature: As a modern day clerk
     Then There are now 3 items
     And Last item is 'Feed the cat'
 
+  @Chrome
+  Scenario: Can check off an item as completed
+    When I add a new item 'Go to dentist'
+    And Check it off as completed
+    Then Item will appear with a strikethrough

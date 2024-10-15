@@ -27,6 +27,7 @@ public class ToDoStepDefs {
 
     By todoList = By.cssSelector("ul.todo-list li");
     By inputTodo = By.cssSelector("input.new-todo");
+    By checkDone = By.cssSelector("input[type=\"checkbox\"]");
 
     public List<WebElement> elements(By locator) {
         return driver.findElements(locator);
@@ -81,5 +82,31 @@ public class ToDoStepDefs {
     @And("Last item is {string}")
     public void lastItemIsFeedTheCat(String task) {
         assertEquals(elements(todoList).getLast().getText(), task);
+    }
+
+    @When("I add a new item {string}")
+    public void iAddANewItemGoToDentist(String task) throws InterruptedException {
+        new Actions(driver)
+                .sendKeys(element(inputTodo), task)
+                .sendKeys(Keys.ENTER)
+                .perform();
+    }
+
+    @And("Check it off as completed")
+    public void checkItOffAsCompleted() throws InterruptedException {
+        elements(todoList)
+                .getLast()
+                .findElement(checkDone)
+                .click();
+    }
+
+    @Then("Item will appear with a strikethrough")
+    public void itemWillAppearWithAStrikethrough() {
+        String lastItem = elements(todoList)
+                .getLast()
+                .getAttribute("class");
+
+        assert lastItem != null;
+        assertTrue(lastItem.contains("completed"));
     }
 }
