@@ -15,22 +15,20 @@ public class Hooks {
     @Before(order = 0, value = "@Chrome")
     public void setUpChrome() {
         driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().deleteAllCookies();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @Before(order = 0, value = "@Firefox")
     public void setUpFirefox() {
         driver = new FirefoxDriver();
-        driver.manage().window().maximize();
-        driver.manage().deleteAllCookies();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @Before(order = 0, value = "@Edge")
     public void setUpEdge() {
         driver = new EdgeDriver();
+    }
+
+    @Before(order = 1)
+    public void conditionBrowser() {
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
