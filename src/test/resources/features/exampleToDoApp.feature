@@ -29,3 +29,10 @@ Feature: As a modern day clerk
     Given Item 'Pay electric bill' is checked as completed
     When I filter for uncompleted tasks
     Then Only 'Walk the dog' shows
+
+  @Chrome
+  Scenario: Can delete all completed tasks
+    Given Item 'Pay electric bill' is checked as completed
+    When 'Clear completed' is clicked
+    Then 'Pay electric bill' is removed
+    But 'Walk the dog' still shows

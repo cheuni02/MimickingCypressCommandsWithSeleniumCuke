@@ -1,9 +1,6 @@
 package org.cheuni02.stepdefs;
 
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -18,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ToDoStepDefs {
 
@@ -28,6 +24,7 @@ public class ToDoStepDefs {
     By todoListCss = By.cssSelector("ul.todo-list li");
     By inputTodoCss = By.cssSelector("input.new-todo");
     By checkDoneCss = By.cssSelector("input[type=\"checkbox\"]");
+    By clearCompletedXpath = By.xpath("//*[contains(text(),\"Clear Completed\")]");
 
     public List<WebElement> elements(By locator) {
         return driver.findElements(locator);
@@ -131,5 +128,38 @@ public class ToDoStepDefs {
         List<WebElement> todoList = elements(todoListCss);
         assertEquals(todoList.size(), 1);
         assertEquals(todoList.getFirst().getText(), task);
+    }
+
+    @When("{string} is clicked")
+    public void clearCompletedIsClicked(String linkText) throws InterruptedException {
+        element(By.linkText(linkText)).click();
+    }
+
+    @Then("{string} is removed")
+    public void payElectricBillIsRemoved(String task) throws InterruptedException {
+        List<String> taskStrings = new ArrayList<>();
+        for (WebElement ele : elements(todoListCss)) {
+            taskStrings.add(ele.getText());
+        }
+        assertFalse(taskStrings.contains(task));
+    }
+
+    @But("{string} still shows")
+    public void walkTheDogStillShows(String task) throws InterruptedException {
+        List<String> taskStrings = new ArrayList<>();
+        for (WebElement ele : elements(todoListCss)) {
+            taskStrings.add(ele.getText());
+        }
+        assertTrue(taskStrings.contains(task));
+    }
+
+    @When("test input")
+    public void testInput() {
+        System.out.println("test input");
+    }
+
+    @Then("test outcome")
+    public void testOutcome() {
+        System.out.println("test outcome");
     }
 }
