@@ -19,6 +19,8 @@ dependencies {
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.16'
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.26.0'
     implementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '7.20.1'
+    implementation 'net.java.dev.jna:jna:5.15.0'
+    implementation 'net.java.dev.jna:jna-platform:5.15.0'
 }
 
 test {
