@@ -24,7 +24,6 @@ public class ToDoStepDefs {
     By todoListCss = By.cssSelector("ul.todo-list li");
     By inputTodoCss = By.cssSelector("input.new-todo");
     By checkDoneCss = By.cssSelector("input[type=\"checkbox\"]");
-    By clearCompletedXpath = By.xpath("//*[contains(text(),\"Clear Completed\")]");
 
     public List<WebElement> elements(By locator) {
         return driver.findElements(locator);
@@ -130,9 +129,10 @@ public class ToDoStepDefs {
         assertEquals(todoList.getFirst().getText(), task);
     }
 
-    @When("{string} is clicked")
-    public void clearCompletedIsClicked(String linkText) throws InterruptedException {
-        element(By.linkText(linkText)).click();
+    @When("Button {string} is clicked")
+    public void buttonClearCompletedIsClicked(String linkText) throws InterruptedException {
+        String xpath = String.format("//*[contains(text(), \"%s\")]", linkText);
+        element(By.xpath(xpath)).click();
     }
 
     @Then("{string} is removed")
@@ -151,15 +151,5 @@ public class ToDoStepDefs {
             taskStrings.add(ele.getText());
         }
         assertTrue(taskStrings.contains(task));
-    }
-
-    @When("test input")
-    public void testInput() {
-        System.out.println("test input");
-    }
-
-    @Then("test outcome")
-    public void testOutcome() {
-        System.out.println("test outcome");
     }
 }

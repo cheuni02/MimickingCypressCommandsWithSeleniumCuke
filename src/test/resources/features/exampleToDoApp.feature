@@ -33,6 +33,6 @@ Feature: As a modern day clerk
   @Chrome
   Scenario: Can delete all completed tasks
     Given Item 'Pay electric bill' is checked as completed
-    When 'Clear completed' is clicked
+    When Button 'Clear completed' is clicked
     Then 'Pay electric bill' is removed
     But 'Walk the dog' still shows
